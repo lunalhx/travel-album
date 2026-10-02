@@ -1,0 +1,16 @@
+.local/
+.DS_Store
+.venv/
+dist/
+__pycache__/
+*.pyc
+/*.zip
+/*.jpg
+/*.png
+/task_plan.md
+/findings.md
+/progress.md
+/import_report.json
+/设计方案.md
+assets/photos/**/*.webp
+!assets/photos/**/*-thumb.webp

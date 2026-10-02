@@ -1,0 +1,17 @@
+[
+  {
+    "file": "china-provinces.geojson",
+    "url": "https://raw.githubusercontent.com/Supeset/China-GeoData/main/geojson/china_province_full.geojson",
+    "sha256": "99adfeded5223848bbe37a0a12f8023e11ee12161c7800521c27db42fdeac275"
+  },
+  {
+    "file": "china-cities.csv",
+    "url": "https://raw.githubusercontent.com/Supeset/China-GeoData/main/csv/china_cities.csv",
+    "sha256": "657dcbec303eb3aefc4fa799b9484cf7b370776ff608db7088a6a85a29122967"
+  },
+  {
+    "file": "LICENSE-China-GeoData.txt",
+    "url": "https://raw.githubusercontent.com/Supeset/China-GeoData/main/LICENSE",
+    "sha256": "f57a1c49161a77cc2bc864a57a5760e1e49efe4d745f65ca28f9817a521949a8"
+  }
+]

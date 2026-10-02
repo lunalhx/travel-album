@@ -1,0 +1,20 @@
+{
+  "重庆": {
+    "provinceCode": "500000",
+    "longitude": 106.5516,
+    "latitude": 29.563,
+    "x": 555.52,
+    "y": 467.21,
+    "precision": "city",
+    "source": "China-GeoData/csv/china_cities.csv"
+  },
+  "兰州": {
+    "provinceCode": "620000",
+    "longitude": 103.8343,
+    "latitude": 36.0611,
+    "x": 516.48,
+    "y": 353.23,
+    "precision": "city",
+    "source": "China-GeoData/csv/china_cities.csv"
+  }
+}

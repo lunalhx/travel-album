@@ -1,0 +1,16 @@
+{
+  "兰州": {
+    "src": "assets/covers/lanzhou.png",
+    "english": "LANZHOU",
+    "width": 1536,
+    "height": 1024,
+    "alt": "兰州城市线稿"
+  },
+  "重庆": {
+    "src": "assets/covers/chongqing.png",
+    "english": "CHONGQING",
+    "width": 1536,
+    "height": 1024,
+    "alt": "重庆城市线稿"
+  }
+}
