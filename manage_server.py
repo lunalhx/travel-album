@@ -262,7 +262,7 @@ class Archive:
                     photo["src"] = photo["thumb"] = relative
                     photo["bytes"] = len(files[relative])
             html = (self.root / "preview.html").read_text()
-            html = html.replace("<title>山野之间 · 旅行相册设计示意</title>", "<title>山野之间 · 旅行相册</title>")
+            html = html.replace("<title>所至所及 · 旅行相册设计示意</title>", "<title>所至所及 · 旅行相册</title>")
             html = html.replace("设计示意 / 非已发布相册", "个人旅行相册")
             html = html.replace("</head>", "<style>[data-admin],#designOpen,#designFooter,#noteEdit{display:none!important}</style></head>")
             files["index.html"] = html.encode()
