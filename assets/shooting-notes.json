@@ -1,23 +1,30 @@
 {
   "lanzhou-2026/2026-03-15": {
     "location": "甘肃省博物馆",
-    "camera": "LUMIX GX9 · 12-32mm",
+    "camera": "LUMIX GX9 · 12-32mm f/3.5-5.6",
     "companions": "秦博文",
     "story": "",
     "isExample": false
   },
   "chongqing-2026/2026-03-04": {
     "location": "南滨路",
-    "camera": "LUMIX GX9 · 12-32mm",
+    "camera": "LUMIX GX9 · 12-32mm f/3.5-5.6",
     "companions": "自己",
     "story": "",
     "isExample": false
   },
   "chongqing-2026/2026-02-10": {
-    "location": "北滨路+鸿恩寺",
+    "location": "北滨路到鸿恩寺",
     "camera": "iPhone14pro",
     "companions": "自己",
     "story": "",
+    "isExample": false
+  },
+  "lanzhou-2026/2026-04-11": {
+    "location": "甘肃临夏回族自治州东乡族自治县",
+    "camera": "LUMIX GX9 · 12-32mm f/3.5-5.6",
+    "companions": "秦博文",
+    "story": "丹霞地貌，但是天气不是特别好\n“陇上杏花第一村”，但是花已经谢完了",
     "isExample": false
   }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "travel-album-design",
+  "version": "1.0.0",
+  "description": "按年份和城市整理照片，按拍摄日期记录地点、器材、同行人与当天的故事。",
+  "main": "album-manager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "python3 -m http.server 8765"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lunalhx/travel-album.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lunalhx/travel-album/issues"
+  },
+  "homepage": "https://github.com/lunalhx/travel-album#readme"
+}

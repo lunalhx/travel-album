@@ -3,19 +3,19 @@
   "albums": [
     {
       "id": "lanzhou-2026",
-      "title": "2026 · 兰州",
+      "title": "2026 · 甘肃",
       "albumType": "annual",
-      "place": "甘肃 · 兰州",
+      "place": "甘肃",
       "provinceCode": "620000",
-      "city": "兰州",
+      "city": "甘肃",
       "year": "2026",
       "dateStart": "2026-03-15",
-      "dateEnd": "2026-03-15",
-      "date": "2026.03.15",
-      "captureDays": 1,
+      "dateEnd": "2026-04-11",
+      "date": "2026.03.15 — 2026.04.11",
+      "captureDays": 2,
       "coverId": "lanzhou-20260315-p1023579",
       "tag": "城市年度相册",
-      "note": "13 张照片 · 1 天拍摄记录",
+      "note": "15 张照片 · 2 天拍摄记录",
       "story": "",
       "locationSource": "folder",
       "photos": [
@@ -174,10 +174,35 @@
           "filename": "20260315-P1023582.jpg",
           "caption": "兰州 · 03月15日 15:45",
           "bytes": 185926
+        },
+        {
+          "id": "photo-aa8a8da8c37af57203bfd55b",
+          "src": "assets/photos/uploads/photo-aa8a8da8c37af57203bfd55b-thumb.webp",
+          "thumb": "assets/photos/uploads/photo-aa8a8da8c37af57203bfd55b-thumb.webp",
+          "width": 1280,
+          "height": 960,
+          "ratio": 1.33333,
+          "shotAt": "2026-04-11T10:49:39",
+          "filename": "P1023629.JPG",
+          "caption": "甘肃 · 2026.04.11",
+          "bytes": 105124
+        },
+        {
+          "id": "photo-d70a12277cb3094afc494e37",
+          "src": "assets/photos/uploads/photo-d70a12277cb3094afc494e37-thumb.webp",
+          "thumb": "assets/photos/uploads/photo-d70a12277cb3094afc494e37-thumb.webp",
+          "width": 960,
+          "height": 1280,
+          "ratio": 0.75,
+          "shotAt": "2026-04-11T12:31:14",
+          "filename": "P1023680.JPG",
+          "caption": "甘肃 · 2026.04.11",
+          "bytes": 170348
         }
       ],
       "sessions": [
-        "2026-03-15"
+        "2026-03-15",
+        "2026-04-11"
       ]
     },
     {
