@@ -22,6 +22,20 @@ const AlbumHelpers = (() => {
     return count ? Math.max(0, Math.min(count - 1, current + delta)) : 0;
   }
 
-  return {groupPhotoDays, regionAlbumIndexes, nextAlbumOffset};
+  function regionPhotoCounts(albums) {
+    const regions = new Map();
+    albums.forEach(album => {
+      const code = String(album.provinceCode);
+      if (!regions.has(code)) regions.set(code, new Set());
+      album.photos.forEach(photo => regions.get(code).add(photo.id));
+    });
+    return new Map([...regions].map(([code, ids]) => [code, ids.size]));
+  }
+
+  function photoCountTier(count) {
+    return count === 0 ? 'none' : count <= 10 ? 'low' : count <= 50 ? 'medium' : 'high';
+  }
+
+  return {groupPhotoDays, regionAlbumIndexes, nextAlbumOffset, regionPhotoCounts, photoCountTier};
 })();
 if (typeof module !== 'undefined' && module.exports) module.exports = AlbumHelpers;

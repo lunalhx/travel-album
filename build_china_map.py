@@ -66,7 +66,7 @@ def path_for(items, transform):
 
 svg = [f'''<svg xmlns="http://www.w3.org/2000/svg" id="chinaMap" viewBox="0 0 {WIDTH} {HEIGHT}" role="group" aria-label="中国省级足迹地图">
 <title>中国足迹地图</title>
-<desc>中国省级区划和南海诸岛附图。金色区域表示有旅行相册，点击区域可浏览不同的相册。</desc>
+<desc>中国省级区划和南海诸岛附图。灰色表示没有照片，蓝色越深表示照片越多，点击区域可浏览相册和照片数量。</desc>
 <defs><clipPath id="southSeaClip"><rect x="825" y="459" width="125" height="191" rx="1"/></clipPath></defs>
 <g id="provinceShapes">''']
 for feature in features:

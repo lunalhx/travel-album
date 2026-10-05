@@ -17,25 +17,25 @@
 @media(max-width:540px){.deck.two .travel-card.current{transform:translateX(-50%)}.deck.two .travel-card.next{transform:translateX(55%) translateY(10px) rotate(2deg) scale(.9)}}
 
 /* The footprint atlas shares the same light palette as all album views. */
+#places{--photo-none:#E5E7EB;--photo-low:#74B9E6;--photo-medium:#337FB8;--photo-high:#17466F}
 #places .page-heading{margin-bottom:22px}
 #places .map-layout{grid-template-columns:minmax(0,1fr) 245px;gap:45px;align-items:start;margin-bottom:32px}
 .china-map-frame{width:100%;aspect-ratio:1000 / 720;position:relative}
 .china-map-frame svg{width:100%;height:100%;display:block;overflow:visible}
 .map-loading{color:#8e9287;padding:100px 0;text-align:center}
-.province path{fill:#e3e4dc;stroke:#f7f7f3;stroke-width:1.1;stroke-linejoin:round;transition:fill .2s}
+.province path{fill:var(--photo-color,var(--photo-none));stroke:#f7f7f3;stroke-width:1.1;stroke-linejoin:round;transition:stroke .2s,stroke-width .2s}
 .province{outline:none}.province.visited{cursor:pointer}
-.province.visited path{fill:#d3a133}
-.province.selected path{fill:#a97721}
-.province.visited:hover path{fill:#bc862a}
-.province:focus-visible path{stroke:#7b602a;stroke-width:2.5}
+.province[data-photo-tier="low"]{--photo-color:var(--photo-low)}
+.province[data-photo-tier="medium"]{--photo-color:var(--photo-medium)}
+.province[data-photo-tier="high"]{--photo-color:var(--photo-high)}
+.province.selected path{stroke:#b8892d;stroke-width:2.5}
+.province:hover path,.province:focus-visible path{stroke:#7b602a;stroke-width:2.5}
 .inset-frame{fill:#f5f5f2;stroke:#d2d6ca;stroke-width:1}
-.inset-land{fill:#e3e4dc;stroke:#f7f7f3;stroke-width:.7}
+.inset-land{fill:var(--photo-none);stroke:#f7f7f3;stroke-width:.7}
 .inset-dotted-line{fill:#a6ad9b;stroke:#a6ad9b;stroke-width:.9}
 .inset-caption{font-size:14px;fill:#929688;font-family:var(--sans);letter-spacing:2px}
 .map-legend{display:flex;align-items:center;justify-content:center;gap:24px;color:#8e9186;font-size:11px;padding:6px 0 18px;flex-wrap:wrap}
 .map-legend span{display:flex;align-items:center;gap:8px}
-.legend-dot{width:8px;height:8px;border-radius:2px;background:#e3e4dc;display:inline-block}
-.legend-dot.visited{background:#d3a133}
 .city-hint{margin-left:12px;color:#797e6e}
 .map-attribution{border-top:1px solid #daddd1;display:flex;justify-content:space-between;gap:12px;font-size:9px;color:#9aa08e;padding-top:15px;line-height:1.8}
 .map-attribution a{text-decoration:underline;text-underline-offset:2px}
@@ -53,8 +53,6 @@
 .photo-day-heading h3{font:20px var(--serif);letter-spacing:1px;margin:0;color:var(--ink)}
 .photo-day-heading span{font-size:11px;color:var(--muted)}
 .province{cursor:pointer}
-.province.selected:not(.visited) path{fill:#d4d9cc}
-.province:not(.visited):hover path{fill:#dce0d4}
 .map-album-switcher{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:22px;padding-top:17px;border-top:1px solid var(--line)}
 .map-album-switcher button{padding:8px 0;color:#686e5d;font-size:11px;white-space:nowrap}
 .map-album-switcher button:first-child{text-align:left}
@@ -215,8 +213,8 @@ body.notes-open{overflow:hidden}
   <div class="map-layout">
     <div class="map-column">
       <div class="china-map-frame" id="chinaMapMount" aria-live="polite"><p class="map-loading">正在展开中国地图…</p></div>
-      <div class="map-legend"><span><i class="legend-dot visited"></i>有旅行相册</span><span><i class="legend-dot"></i>尚未记录</span><span class="city-hint">点击区域，翻阅相册 ↗</span></div>
-      <div class="map-attribution"><span>省份着色表示有相册记录 · 区县与景点收在相册里</span><a href="https://github.com/Supeset/China-GeoData" target="_blank" rel="noopener">地图数据：China-GeoData</a></div>
+      <div class="map-legend"><span class="city-hint">点击区域，翻阅相册 ↗</span></div>
+      <div class="map-attribution"><span>颜色越深，照片越多 · 同一照片在本地区只计一次</span><a href="https://github.com/Supeset/China-GeoData" target="_blank" rel="noopener">地图数据：China-GeoData</a></div>
     </div>
     <aside class="map-detail" id="mapDetail" aria-label="区域相册">
       <div class="eyebrow" id="regionName"></div>
@@ -522,15 +520,19 @@ function changeRegionAlbum(delta){
 }
 function renderMap(){
   if(!selectedProvinceCode)selectedProvinceCode=String(trips[0]?.provinceCode||'');
+  const photoCounts=AlbumHelpers.regionPhotoCounts(trips);
   const regionCount=new Set(trips.map(t=>String(t.provinceCode))).size;
   $('mapStats').textContent=regionCount+' 个地区 · '+trips.length+' 本相册';
   if(mapSvg)mapSvg.querySelectorAll('.province').forEach(region=>{
     const code=region.dataset.code;
     const visited=AlbumHelpers.regionAlbumIndexes(trips,code).length>0;
+    const photoCount=photoCounts.get(code)||0;
+    region.dataset.photoTier=AlbumHelpers.photoCountTier(photoCount);
+    region.querySelector('title').textContent=region.dataset.name+' · '+photoCount+' 张照片';
     const selected=code===selectedProvinceCode;
     region.classList.toggle('visited',visited);region.classList.toggle('selected',selected);
     region.setAttribute('role','button');region.setAttribute('tabindex','0');
-    region.setAttribute('aria-label','查看 '+region.dataset.name+' 的相册');
+    region.setAttribute('aria-label',region.dataset.name+' · '+photoCount+' 张照片，查看相册');
     region.setAttribute('aria-pressed',String(selected));
     region.onclick=()=>selectRegion(code);
     region.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectRegion(code);}};
@@ -539,7 +541,7 @@ function renderMap(){
   regionAlbumOffset=AlbumHelpers.nextAlbumOffset(regionAlbumOffset,0,indexes.length);
   const region=mapSvg?.querySelector('[data-code="'+selectedProvinceCode+'"]');
   const name=(region?.dataset.name||'所选区域').replace(/(省|市)$/,'');
-  $('regionName').textContent=name+' · '+indexes.length+' 本相册';
+  $('regionName').textContent=name+' · '+(photoCounts.get(selectedProvinceCode)||0)+' 张照片 · '+indexes.length+' 本相册';
   const hasAlbums=indexes.length>0;
   document.querySelectorAll('[data-album-content]').forEach(el=>el.hidden=!hasAlbums);
   $('regionAlbumSwitcher').hidden=!hasAlbums;$('regionEmpty').hidden=hasAlbums;
