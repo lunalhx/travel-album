@@ -262,11 +262,9 @@ class Archive:
                     photo["src"] = photo["thumb"] = relative
                     photo["bytes"] = len(files[relative])
             html = (self.root / "preview.html").read_text()
-            html = html.replace("<title>所至所及 · 旅行相册设计示意</title>", "<title>所至所及 · 旅行相册</title>")
-            html = html.replace("设计示意 / 非已发布相册", "个人旅行相册")
-            html = html.replace("</head>", "<style>[data-admin],#designOpen,#designFooter,#noteEdit{display:none!important}</style></head>")
+            html = html.replace("</head>", "<style>[data-admin],#noteEdit{display:none!important}</style></head>")
             files["index.html"] = html.encode()
-            for name in ["album_helpers.js", "album-manager.js", "album-manager.css"]:
+            for name in ["album_helpers.js", "album-manager.js", "album-manager.css", "assets/favicon.svg"]:
                 files[name] = (self.root / name).read_bytes()
             files["assets/albums.json"] = json.dumps(manifest, ensure_ascii=False, indent=2).encode()
             files["assets/shooting-notes.json"] = json.dumps(state["notes"], ensure_ascii=False, indent=2).encode()
@@ -326,7 +324,7 @@ def handler_for(archive, token):
                     return self.reply(200, html.encode(), "text/html; charset=utf-8")
                 file = (archive.root / path.lstrip("/")).resolve()
                 if not file.is_relative_to(archive.root) or not file.is_file() or not (
-                    path.startswith("/assets/") or path in {"/album_helpers.js", "/album-manager.js", "/album-manager.css", "/设计方案.md"}
+                    path.startswith("/assets/") or path in {"/album_helpers.js", "/album-manager.js", "/album-manager.css"}
                 ):
                     return self.reply(404, {"error": "没有这个资源。"})
                 self.reply(200, file.read_bytes(), mimetypes.guess_type(file.name)[0] or "application/octet-stream")

@@ -18,6 +18,31 @@ python -m pip install -r requirements.txt
 python manage_server.py
 ```
 
+## 管理相册
+
+在本机页面点击「管理相册」，可以：
+
+- 新建、删除相册，修改名称、年份、城市和所属地区。
+- 添加、修改、移除拍摄日期；修改整组日期时，照片和手记一起移动。
+- 批量添加 JPG、PNG 或 WebP，自动生成最长边 1280px 的轻量副本；HEIC 需先转换。
+- 修改照片日期和说明，批量移除照片引用。
+- 记录拍摄地点、器材、同行人和故事。
+- 撤销最后一次改动，一次批量添加可一起撤销。
+
+年度册的拍摄日期必须属于该年份。同城同年使用同一本年度册；两个日期都有手记时，需要先整理内容再合并日期。
+
+修改保存在 `assets/albums.json`、`assets/shooting-notes.json` 和 `assets/photos/uploads/`。撤销记录保存在 `.local/history/`；这些备份请保留。删除相册或移除照片只改变引用，原图与其他相册不受影响。
+
+终端窗口需保持运行，按 Ctrl+C 可停止服务。端口占用时先检查是否已启动另一个管理窗口。
+
+需要手动发布包时，可点击管理页「导出发布包」，或运行：
+
+```sh
+python manage_server.py --export /tmp/travel-album-site.zip
+```
+
+首次批量导入使用 `import_photos.py`；之后通过管理页继续添加，避免重新导入覆盖手工整理。导入报告和联系表保存在 `.local/imports/`，不进入仓库。
+
 ## 更新网站
 
 本机编辑完成后，双击 `publish.command`。脚本会检查并提交当前相册资料、手记、引用的轻量照片和网页源码，再推送到 `main`；GitHub Actions 自动构建并部署。
@@ -54,3 +79,13 @@ python build_site.py
 当前覆盖相册/日期/照片编辑、手记随日期迁移、删除与撤销、批量撤销、原图不变和静态导出资源。
 
 地图源数据：<https://github.com/Supeset/China-GeoData>（MIT），许可保留在 `assets/maps/source/LICENSE-China-GeoData.txt`。照片与城市封面不授予公开复用许可。
+
+## 项目文件
+
+- `preview.html`、`album-manager.js`、`album-manager.css`、`album_helpers.js`：网页和管理界面。
+- `assets/`：相册资料、手记、照片、城市封面和地图；不要随意删除。
+- `manage_server.py`：本机管理服务；`build_site.py`、`publish.py`：构建和发布。
+- `import_photos.py`、`album_model.py`：首次导入与相册分组。
+- `build_china_map.py`、`fetch_map_data.py`、`prepare_city_covers.py`：地图与封面维护工具。
+- `test_archive_management.py`、`.github/`：检查与自动部署。
+- `.local/`：本机撤销备份与导入报告，不提交；`dist/` 是可重新生成的发布目录。

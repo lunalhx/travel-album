@@ -89,7 +89,9 @@ def import_photos(source, output):
         "colorSpace": "sRGB",
         "sourceFilesModified": False,
     }
-    (output.parent / "import_report.json").write_text(json.dumps(report, indent=2) + "\n")
+    diagnostics = output.parent / ".local" / "imports"
+    diagnostics.mkdir(parents=True, exist_ok=True)
+    (diagnostics / "import_report.json").write_text(json.dumps(report, indent=2) + "\n")
 
     cols, cell_w, cell_h = 4, 310, 245
     rows = (len(all_thumbs) + cols - 1) // cols
@@ -100,7 +102,7 @@ def import_photos(source, output):
         image = ImageOps.contain(thumb, (cell_w - 16, cell_h - 38))
         sheet.paste(image, (x + (cell_w - image.width) // 2, y + 6))
         drawing.text((x + 8, y + cell_h - 22), label, fill="#f2efe8")
-    sheet.save(output.parent / "contact-sheet.jpg", quality=88)
+    sheet.save(diagnostics / "contact-sheet.jpg", quality=88)
     print(json.dumps(report, ensure_ascii=False))
 
 

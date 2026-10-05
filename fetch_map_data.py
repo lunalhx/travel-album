@@ -11,7 +11,6 @@ out.mkdir(parents=True, exist_ok=True)
 base = "https://raw.githubusercontent.com/Supeset/China-GeoData/main/"
 files = [
     ("geojson/china_province_full.geojson", "china-provinces.geojson"),
-    ("csv/china_cities.csv", "china-cities.csv"),
     ("LICENSE", "LICENSE-China-GeoData.txt"),
 ]
 sources = []

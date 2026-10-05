@@ -1,6 +1,5 @@
-"""Build a local vector China map and city-level album marker positions."""
+"""Build the local province map used by the footprint page."""
 
-import csv
 import html
 import json
 import math
@@ -97,37 +96,17 @@ svg.append('</g><text class="inset-caption" x="887.5" y="670" text-anchor="middl
 svg.append('</svg>')
 (ROOT / "china-provinces.svg").write_text("\n".join(svg) + "\n")
 
-province_codes = {"兰州": "620000", "重庆": "500000"}
-city_points = {}
-with (SOURCE / "china-cities.csv").open() as handle:
-    for city in csv.DictReader(handle):
-        if city["name"] not in province_codes:
-            continue
-        lon, lat = float(city["lon"]), float(city["lat"])
-        x, y = screen(lon, lat)
-        city_points[city["name"]] = {
-            "provinceCode": province_codes[city["name"]],
-            "longitude": lon,
-            "latitude": lat,
-            "x": round(x, 2),
-            "y": round(y, 2),
-            "precision": "city",
-            "source": "China-GeoData/csv/china_cities.csv",
-        }
-assert set(city_points) == set(province_codes)
-(ROOT / "city-points.json").write_text(json.dumps(city_points, ensure_ascii=False, indent=2) + "\n")
-(ROOT / "README.md").write_text('''# 中国足迹地图资源
+(ROOT / "README.md").write_text("""# 中国足迹地图资源
 
 源数据：https://github.com/Supeset/China-GeoData
 
 许可：MIT，Copyright (c) 2025 圈集；完整许可保留在 source/LICENSE-China-GeoData.txt。
-源文件 URL 与 SHA-256 保存在 source/sources.json。地图数据来自项目公开的省级 GeoJSON 与城市 CSV。
+源文件 URL 与 SHA-256 保存在 source/sources.json。地图使用该项目的省级 GeoJSON。
 
 build_china_map.py 生成本地 SVG：34 个省级区域，南海诸岛及源数据提供的海上虚线置于附图。
 主图使用球面 Albers 等积圆锥投影，标准纬线 25°、47°，中央经线 105°；附图单独缩放。
-城市标记是公开城市中心位置，用于旅行相册归档，不代表照片 GPS。省份高亮表示存在该省相册。
+页面根据相册 provinceCode 为省份着色并浏览该区域的相册，不使用城市点位数据。
 
 该页面无需在线地图 SDK、Key 或第三方地图瓦片服务；构建完成后地图资源随网站一起托管。
-''')
+""")
 print("Built", ROOT / "china-provinces.svg", (ROOT / "china-provinces.svg").stat().st_size, "bytes")
-print(json.dumps(city_points, ensure_ascii=False))

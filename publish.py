@@ -14,11 +14,11 @@ SOURCE_FILES = [
     "build_site.py", "publish.py", "publish.command", "start_manager.command",
     "preview.html", "album_helpers.js", "album-manager.js", "album-manager.css",
     "manage_server.py", "album_model.py", "import_photos.py", "test_archive_management.py",
-    "build_china_map.py", "fetch_map_data.py", "prepare_city_covers.py", "相册管理说明.md",
-    "assets/albums.json", "assets/shooting-notes.json", "assets/city-covers.json",
+    "build_china_map.py", "fetch_map_data.py", "prepare_city_covers.py",
+    "assets/favicon.svg", "assets/albums.json", "assets/shooting-notes.json", "assets/city-covers.json",
     "assets/special-albums.json", "assets/special-albums-guide.md", "assets/covers/README.md",
-    "assets/maps/README.md", "assets/maps/china-provinces.svg", "assets/maps/city-points.json",
-    "assets/maps/source/china-provinces.geojson", "assets/maps/source/china-cities.csv",
+    "assets/maps/README.md", "assets/maps/china-provinces.svg",
+    "assets/maps/source/china-provinces.geojson",
     "assets/maps/source/sources.json", "assets/maps/source/LICENSE-China-GeoData.txt",
 ]
 
@@ -46,7 +46,9 @@ def stage():
     build_site(PROJECT, PROJECT / "dist")
     paths = publication_paths()
     tracked = git("ls-files", "-z", capture_output=True).stdout.decode().split("\0")
-    removed = [p for p in tracked if p.startswith("assets/photos/") and p not in paths]
+    removed = [p for p in tracked if p and (
+        (p.startswith("assets/photos/") and p not in paths) or not (PROJECT / p).exists()
+    )]
     if removed:
         git("rm", "--cached", "--", *removed)
     git("add", "--pathspec-from-file=-", "--pathspec-file-nul", input=("\0".join(paths) + "\0").encode())
