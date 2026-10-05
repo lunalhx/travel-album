@@ -28,8 +28,10 @@
 .province[data-photo-tier="low"]{--photo-color:var(--photo-low)}
 .province[data-photo-tier="medium"]{--photo-color:var(--photo-medium)}
 .province[data-photo-tier="high"]{--photo-color:var(--photo-high)}
-.province.selected path{stroke:#b8892d;stroke-width:2.5}
-.province:hover path,.province:focus-visible path{stroke:#7b602a;stroke-width:2.5}
+.map-region-outline{pointer-events:none}
+.map-region-outline path{fill:none;stroke:#496d83;stroke-width:1.2;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.map-region-outline.hovered path{stroke:#718898}
+.map-region-outline.focused path{stroke-width:1.6}
 .inset-frame{fill:#f5f5f2;stroke:#d2d6ca;stroke-width:1}
 .inset-land{fill:var(--photo-none);stroke:#f7f7f3;stroke-width:.7}
 .inset-dotted-line{fill:#a6ad9b;stroke:#a6ad9b;stroke-width:.9}
@@ -499,7 +501,7 @@ async function renderPhoto(direction=0){
 }
 function changePhoto(delta){const count=trips[selectedTrip].order.length;if(count<2)return;photoIndex=(photoIndex+delta+count)%count;renderPhoto(Math.sign(delta));}
 $('viewer').addEventListener('close',()=>{photoRenderVersion++;$('viewerStage').querySelectorAll('.viewer-leaving').forEach(el=>el.remove());});
-let mapSvg=null,selectedProvinceCode='',regionAlbumOffset=0;
+let mapSvg=null,mapOutlineLayer=null,hoveredProvinceCode='',focusedProvinceCode='',selectedProvinceCode='',regionAlbumOffset=0;
 async function loadChinaMap(){
   try{
     const response=await fetch('./assets/maps/china-provinces.svg');
@@ -508,8 +510,25 @@ async function loadChinaMap(){
     if(parsed.querySelector('parsererror'))throw new Error('地图格式错误');
     mapSvg=document.importNode(parsed.documentElement,true);
     mapSvg.querySelector('#cityMarkers')?.remove();
+    mapOutlineLayer=document.createElementNS('http://www.w3.org/2000/svg','g');
+    mapOutlineLayer.setAttribute('aria-hidden','true');
+    mapOutlineLayer.style.pointerEvents='none';
+    mapSvg.querySelector('#provinceShapes').append(mapOutlineLayer);
     $('chinaMapMount').replaceChildren(mapSvg);
   }catch(error){$('chinaMapMount').textContent='地图加载失败，请刷新重试。';console.error(error);}
+}
+function renderMapOutlines(){
+  if(!mapOutlineLayer)return;
+  mapOutlineLayer.replaceChildren();
+  for(const [code,state] of [[selectedProvinceCode,'selected'],[hoveredProvinceCode,'hovered'],[focusedProvinceCode,'focused']]){
+    if(!code)continue;
+    const region=mapSvg.querySelector('.province[data-code="'+code+'"]');
+    if(!region)continue;
+    const outline=document.createElementNS('http://www.w3.org/2000/svg','g');
+    outline.setAttribute('class','map-region-outline '+state);
+    region.querySelectorAll('path').forEach(path=>outline.append(path.cloneNode(true)));
+    mapOutlineLayer.append(outline);
+  }
 }
 function selectRegion(code){selectedProvinceCode=String(code);regionAlbumOffset=0;renderMap();revealRegionAlbum();}
 function revealRegionAlbum(direction=1){animateElement($('regionAlbumCover'),[{opacity:0,transform:'translateX('+(direction*18)+'px)'},{opacity:1,transform:'translateX(0)'}],{duration:550});animateElement($('regionAlbumTitle'),[{opacity:0,transform:'translateY(7px)'},{opacity:1,transform:'translateY(0)'}],{duration:450});}
@@ -535,8 +554,13 @@ function renderMap(){
     region.setAttribute('aria-label',region.dataset.name+' · '+photoCount+' 张照片，查看相册');
     region.setAttribute('aria-pressed',String(selected));
     region.onclick=()=>selectRegion(code);
+    region.onpointerenter=()=>{hoveredProvinceCode=code;renderMapOutlines();};
+    region.onpointerleave=()=>{hoveredProvinceCode='';renderMapOutlines();};
+    region.onfocus=()=>{focusedProvinceCode=region.matches(':focus-visible')?code:'';renderMapOutlines();};
+    region.onblur=()=>{focusedProvinceCode='';renderMapOutlines();};
     region.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectRegion(code);}};
   });
+  renderMapOutlines();
   const indexes=AlbumHelpers.regionAlbumIndexes(trips,selectedProvinceCode);
   regionAlbumOffset=AlbumHelpers.nextAlbumOffset(regionAlbumOffset,0,indexes.length);
   const region=mapSvg?.querySelector('[data-code="'+selectedProvinceCode+'"]');
